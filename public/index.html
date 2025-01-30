@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numerador de PDF</title>
+</head>
+<body>
+    <h1>Numerador de PDF</h1>
+    <form action="/processar-pdf" method="POST" enctype="multipart/form-data">
+        <label for="pdf">Envie o PDF:</label>
+        <input type="file" name="pdf" id="pdf" required><br><br>
+
+        <label for="numeroInicial">Número Inicial da Página:</label>
+        <input type="number" name="numeroInicial" id="numeroInicial" required><br><br>
+
+        <label for="numeroProcesso">Número do Processo:</label>
+        <input type="text" name="numeroProcesso" id="numeroProcesso" required><br><br>
+
+        <label for="anoProcesso">Ano do Processo:</label>
+        <input type="number" name="anoProcesso" id="anoProcesso" required><br><br>
+
+        <label for="incluirRubrica">Incluir Rubrica?</label>
+        <input type="checkbox" name="incluirRubrica" id="incluirRubrica"><br><br>
+
+        <label for="rubrica">Envie a Rubrica (JPG/PNG):</label>
+        <input type="file" name="rubrica" id="rubrica"><br><br>
+
+        <button type="submit">Processar PDF</button>
+    </form>
+</body>
+</html>
