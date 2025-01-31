@@ -1,7 +1,7 @@
 {
   "name": "numerador-pdf",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +10,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "express": "^4.21.2",
     "multer": "^1.4.5-lts.1",
