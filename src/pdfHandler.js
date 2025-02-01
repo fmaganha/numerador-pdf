@@ -125,7 +125,7 @@ async function processarPDF(pdfPath, numeroInicial, numeroProcesso, anoProcesso,
     }
 
     const pdfBytesProcessado = await pdfDoc.save();
-    const outputPath = `output_${Date.now()}.pdf`;
+    const outputPath = path.join(__dirname, 'tmp', `output_${Date.now()}.pdf`);
     fs.writeFileSync(outputPath, pdfBytesProcessado);
 
     return outputPath;

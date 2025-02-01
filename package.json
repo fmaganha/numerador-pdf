@@ -1,22 +1,17 @@
 {
   "name": "numerador-pdf",
   "version": "1.0.0",
-  "main": "src/server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node src/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "engines": {
-    "node": "16.x"
-  },
   "dependencies": {
     "express": "^4.21.2",
     "multer": "^1.4.5-lts.1",
     "pdf-lib": "^1.17.1",
-    "sharp": "^0.33.5"
+    "sharp": "^0.30.5"
   }
 }

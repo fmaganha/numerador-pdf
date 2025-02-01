@@ -1,18 +1,21 @@
 const express = require('express');
 const multer = require('multer');
+const path = require('path');
 const pdfHandler = require('./pdfHandler');
 const fs = require('fs');
 
-const app = express();
-
-// Configuração do Multer para usar memória em vez de disco
-const upload = multer({ storage: multer.memoryStorage() }).fields([
-    { name: 'pdf', maxCount: 1 },
-    { name: 'rubrica', maxCount: 1 }
+// Configura o diretório temporário usando a variável de ambiente TMPDIR (usada pelo Render)
+const upload = multer({ dest: path.join(__dirname, 'tmp') }).fields([
+    { name: 'pdf', maxCount: 1 }, // Campo para o PDF
+    { name: 'rubrica', maxCount: 1 } // Campo para a rubrica
 ]);
 
+const app = express();
+
+// Serve arquivos estáticos (página HTML)
 app.use(express.static('public'));
 
+// Endpoint para processar o PDF
 app.post('/processar-pdf', upload, async (req, res) => {
     const { numeroInicial, numeroProcesso, anoProcesso, incluirRubrica } = req.body;
 
@@ -21,31 +24,34 @@ app.post('/processar-pdf', upload, async (req, res) => {
         return res.status(400).send('PDF é obrigatório.');
     }
 
-    const pdfBuffer = req.files['pdf'][0].buffer; // Buffer do PDF
-    const rubricaBuffer = req.files['rubrica'] ? req.files['rubrica'][0].buffer : null; // Buffer da rubrica (se existir)
+    const pdfPath = req.files['pdf'][0].path; // Caminho do PDF
+    const rubricaPath = req.files['rubrica'] ? req.files['rubrica'][0].path : null; // Caminho da rubrica (se existir)
 
     // Validação da rubrica
-    if (incluirRubrica === 'on' && !rubricaBuffer) {
+    if (incluirRubrica === 'on' && !rubricaPath) {
         return res.status(400).send('Rubrica é obrigatória.');
     }
 
     try {
         const pdfPathProcessado = await pdfHandler.processarPDF(
-            pdfBuffer, // Passa o buffer diretamente
+            pdfPath,
             numeroInicial,
             numeroProcesso,
             anoProcesso,
-            incluirRubrica === 'on',
-            rubricaBuffer // Passa o buffer diretamente
+            incluirRubrica === 'on', // Converte para booleano
+            rubricaPath
         );
 
+        // Envia o arquivo processado para o usuário
         res.download(pdfPathProcessado, 'documento_processado.pdf', (err) => {
             if (err) {
                 console.error('Erro ao enviar o arquivo:', err);
                 res.status(500).send('Erro ao enviar o arquivo');
             } else {
-                // Exclui o arquivo temporário após o download
-                fs.unlinkSync(pdfPathProcessado);
+                // Exclui os arquivos temporários após o download
+                fs.unlinkSync(pdfPath);
+                if (rubricaPath) fs.unlinkSync(rubricaPath);
+                fs.unlinkSync(pdfPathProcessado); // Exclui o PDF processado
             }
         });
     } catch (error) {
@@ -54,6 +60,7 @@ app.post('/processar-pdf', upload, async (req, res) => {
     }
 });
 
+// Usa a variável de ambiente PORT, necessária para o Render
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);
