@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const pdfHandler = require('./pdfHandler');
+const pdfHandler = require('./src/pdfHandler');
 const fs = require('fs');
 
 // Configura o diretório temporário usando a variável de ambiente TMPDIR (usada pelo Render)
