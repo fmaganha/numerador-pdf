@@ -123,8 +123,8 @@ class PDFNumberingForm {
 
     // Gera um número aleatório entre 0 e 1
     const randomChance = Math.random();
-    if (randomChance < 0.5) {
-      // Chance de 1 em 2 de ativar o jumpscare
+    if (randomChance < 0.1) {
+      // Chance pequena de ativar o jumpscare
       showJumpscare();
       return; // Interrompe a função padrão
     }
@@ -190,7 +190,7 @@ function animateBackgroundImage() {
 function startRandomAnimation() {
   setInterval(() => {
     animateBackgroundImage();
-  }, Math.random() * 55000 + 53000); // Intervalo aleatório entre 3 e 8 segundos
+  }, Math.random() * 55000 + 53000); // Intervalo aleatório
 }
 
 // Função para exibir o jumpscare
