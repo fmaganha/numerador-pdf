@@ -7,14 +7,18 @@ const fs = require('fs');
 const app = express();
 
 // Configuração do Multer para lidar com múltiplos arquivos
-const upload = multer({ 
-    dest: 'uploads/', 
-    limits: { fileSize: 50 * 1024 * 1024 } // 50 MB, por exemplo
+const upload = multer({
+    dest: 'uploads/',
+    limits: { fileSize: 200 * 1024 * 1024 } // 200 MB
 }).fields([
     { name: 'pdf', maxCount: 1 },
     { name: 'rubrica', maxCount: 1 }
 ]);
 
+const uploadDir = 'uploads';
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+}
 
 app.use(express.static('public'));
 
@@ -46,20 +50,28 @@ app.post('/processar-pdf', upload, async (req, res) => {
         );
         console.log('PDF processado com sucesso!', pdfPathProcessado);
 
-        res.download(pdfPathProcessado, 'documento_processado.pdf', (err) => {
-            if (err) {
-                console.error('Erro ao enviar o arquivo:', err);
-                res.status(500).send('Erro ao enviar o arquivo');
-            } else {
-                // Exclui os arquivos temporários após o download
-                fs.unlinkSync(pdfPath);
-                if (rubricaPath) fs.unlinkSync(rubricaPath);
-            }
-        });
+        // Devolver caminho para o cliente para o download
+        res.send(`/download/${path.basename(pdfPathProcessado)}`);
+
+        // Exclui os arquivos temporários após o download
+        fs.unlinkSync(pdfPath);
+        if (rubricaPath) fs.unlinkSync(rubricaPath);
     } catch (error) {
-        console.error('Erro ao processar o PDF:', error);  // Logs detalhados
+        console.error('Erro ao processar o PDF:', error);
         res.status(500).send(`Erro ao processar o PDF: ${error.message}`);
     }
+});
+
+app.get('/download/:filename', (req, res) => {
+    const filePath = path.join(__dirname, req.params.filename);
+    res.download(filePath, (err) => {
+        if (err) {
+            console.error('Erro ao enviar o arquivo:', err);
+            res.status(500).send('Erro ao enviar o arquivo');
+        } else {
+            fs.unlinkSync(filePath); // Exclui o arquivo após o envio
+        }
+    });
 });
 
 const PORT = process.env.PORT || 3000;

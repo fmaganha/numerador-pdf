@@ -1,32 +1,89 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Numerador de PDF</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Numerador de PDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <h1>Numerador de PDF</h1>
-    <form action="/processar-pdf" method="POST" enctype="multipart/form-data">
-        <label for="pdf">Envie o PDF:</label>
-        <input type="file" name="pdf" id="pdf" required><br><br>
+  <img id="jumpscare-image" src="images/jumpscare.jpg" alt="Jumpscare">
+  <img id="background-image" src="images/sua-imagem.png" alt="Imagem de Fundo">
+  <div class="container">
+    <header>
+      <h1>Numerador de PA</h1>
+      <p>Numere seu PA de forma rápida e eficiente.</p>
+    </header>
 
-        <label for="numeroInicial">Número Inicial da Página:</label>
-        <input type="number" name="numeroInicial" id="numeroInicial" required><br><br>
+    <form id="pdf-numbering-form" action="/processar-pdf" method="POST" enctype="multipart/form-data">
+      <div class="form-group">
+        <label for="pdf-upload">
+          <i class="fas fa-file-pdf"></i> Envie o PDF
+        </label>
+        <input type="file" id="pdf-upload" name="pdf" accept=".pdf" required>
+        <div id="drag-drop-area">
+          Arraste e solte o PDF aqui ou clique para selecionar
+        </div>
+      </div>
 
-        <label for="numeroProcesso">Número do Processo:</label>
-        <input type="text" name="numeroProcesso" id="numeroProcesso" required><br><br>
+      <div class="form-group">
+        <label for="start-page">
+          <i class="fas fa-sort-numeric-down"></i> Número Inicial da Página
+        </label>
+        <input type="number" id="start-page" name="numeroInicial" min="1" required>
+      </div>
 
-        <label for="anoProcesso">Ano do Processo:</label>
-        <input type="number" name="anoProcesso" id="anoProcesso" required><br><br>
+      <div class="form-group">
+        <label for="process-number">
+          <i class="fas fa-hashtag"></i> Número do Processo
+        </label>
+        <input type="text" id="process-number" name="numeroProcesso" required>
+      </div>
 
-        <label for="incluirRubrica">Incluir Rubrica?</label>
-        <input type="checkbox" name="incluirRubrica" id="incluirRubrica"><br><br>
+      <div class="form-group">
+        <label for="process-year">
+          <i class="fas fa-calendar-alt"></i> Ano do Processo
+        </label>
+        <input type="number" id="process-year" name="anoProcesso" min="1900" max="2100" required>
+      </div>
 
-        <label for="rubrica">Envie a Rubrica (JPG/PNG):</label>
-        <input type="file" name="rubrica" id="rubrica"><br><br>
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="include-signature" name="incluirRubrica">
+        <label for="include-signature">Incluir Rubrica</label>
 
-        <button type="submit">Processar PDF</button>
+        <div class="signature-upload" id="signature-upload-container">
+          <label for="signature-upload">
+            <i class="fas fa-signature"></i> Envie a Rubrica (JPG/PNG)
+          </label>
+          <input type="file" id="signature-upload" name="rubrica" accept=".jpg,.png">
+          <div id="signature-drag-drop-area">
+            Arraste e solte a rubrica aqui ou clique para selecionar
+          </div>
+          <input type="file" id="signature-upload" name="signature-upload" accept="image/jpeg, image/png" />
+        </div>
+        
+      </div>
+
+      <button type="submit" class="submit-btn">
+        <i class="fas fa-file-upload"></i> Processar PDF
+      </button>
     </form>
+
+    <div class="form-group" id="upload-status-container">
+      <p id="upload-status" class="upload-status">Nenhum arquivo carregado.</p>
+    </div>
+
+  </div>
+
+  <div id="loading-overlay" class="hidden">
+    <div class="loading-spinner"></div>
+    <p>Processando PDF...</p>
+  </div>
+
+  <div id="message-overlay" class="hidden"></div>
+
+  <script src="js/script.js"></script>
 </body>
 </html>

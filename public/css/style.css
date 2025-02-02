@@ -1,0 +1,271 @@
+:root {
+  --primary-blue: #2c3e50;
+  --light-blue: #34495e;
+  --accent-green: #2ecc71;
+  --white: #ffffff;
+  --light-gray: #f4f4f4;
+  --error-red: #e74c3c;
+  --success-green: #27ae60;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--light-gray);
+  color: var(--primary-blue);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background-color: var(--white);
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  color: var(--primary-blue);
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  color: var(--light-blue);
+  font-size: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--primary-blue);
+  cursor: pointer;
+}
+
+.form-group label i {
+  margin-right: 0.5rem;
+  color: var(--light-blue);
+}
+
+.form-group input[type="file"],
+.form-group input[type="number"],
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+#pdf-upload,
+#signature-upload {
+  display: none;
+}
+
+#drag-drop-area {
+  border: 2px dashed #ddd;
+  border-radius: 5px;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--light-blue);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#drag-drop-area:hover {
+  background-color: rgba(46, 204, 113, 0.1);
+  border-color: var(--accent-green);
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+#signature-upload-container {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.checkbox-group:has(input:checked) #signature-upload-container {
+  display: block;
+  opacity: 1;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--accent-green);
+  color: var(--white);
+  border: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: var(--success-green);
+}
+
+.submit-btn i {
+  margin-right: 0.5rem;
+}
+
+#loading-overlay,
+#message-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.loading-spinner {
+  border: 5px solid var(--white);
+  border-top: 5px solid var(--accent-green);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.message-overlay {
+  color: var(--white);
+  padding: 1rem;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.message-overlay.error {
+  background-color: var(--error-red);
+}
+
+.message-overlay.success {
+  background-color: var(--success-green);
+}
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  
+  header h1 {
+    font-size: 2rem;
+  }
+}
+
+#signature-drag-drop-area {
+  border: 2px dashed #ddd;
+  border-radius: 5px;
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--light-blue);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+#signature-drag-drop-area:hover {
+  background-color: rgba(46, 204, 113, 0.1);
+  border-color: var(--accent-green);
+}
+
+/* Estilo para a imagem de fundo */
+#background-image {
+  position: absolute;
+  top: 50%; /* Centraliza verticalmente */
+  left: 50%; /* Alinha com o centro da tela */
+  transform: translate(-150%, -50%); /* Move a imagem para a esquerda, saindo de trás do container */
+  z-index: -1; /* Fica atrás do container */
+  width: 200px; /* Ajuste o tamanho conforme necessário */
+  height: auto;
+  transition: transform 2s ease-in-out; /* Animação suave */
+}
+
+/* Animação para o jumpscare */
+/*@keyframes jumpscare {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}*/
+
+/* Estilo para a imagem de jumpscare */
+#jumpscare-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%; /* Ocupa toda a largura da tela */
+  height: 100%; /* Ocupa toda a altura da tela */
+  object-fit: cover; /* Mantém a proporção da imagem */
+  z-index: 9999; /* Garante que a imagem fique acima de tudo */
+  display: none; /* Inicialmente oculta */
+}
+
+/* Animação para o jumpscare */
+@keyframes jumpscare {
+  0% {
+    opacity: 0; /* Começa invisível */
+    transform: scale(0.8); /* Inicia ligeiramente menor */
+  }
+  10% {
+    opacity: 1; /* Torna-se visível quase imediatamente */
+    transform: scale(1.5); /* Amplia rapidamente para criar impacto */
+  }
+  90% {
+    opacity: 1; /* Mantém a imagem visível por mais tempo */
+    transform: scale(1.1); /* Volta ao tamanho normal */
+  }
+  100% {
+    opacity: 0; /* Desaparece rapidamente */
+    transform: scale(1);
+  }
+}
