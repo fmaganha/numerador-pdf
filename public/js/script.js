@@ -9,13 +9,13 @@ class PDFNumberingForm {
     this.signatureDragDropArea = document.getElementById('signature-drag-drop-area');
     this.loadingOverlay = document.getElementById('loading-overlay');
     this.messageOverlay = document.getElementById('message-overlay');
-    this.uploadStatus = document.getElementById('upload-status'); // Novo elemento para mostrar o status de upload
+    this.uploadStatus = document.getElementById('upload-status');
     this.initEventListeners();
   }
 
   initEventListeners() {
     this.form.addEventListener('submit', this.handleSubmit.bind(this));
-    this.pdfUpload.addEventListener('change', this.handleFileSelect.bind(this)); // Adicionando o evento de mudança para o input de arquivo
+    this.pdfUpload.addEventListener('change', this.handleFileSelect.bind(this));
     this.dragDropArea.addEventListener('click', () => this.pdfUpload.click());
     this.dragDropArea.addEventListener('dragover', this.handleDragOver.bind(this));
     this.dragDropArea.addEventListener('drop', this.handleFileDrop.bind(this));
@@ -45,14 +45,14 @@ class PDFNumberingForm {
     const files = event.dataTransfer.files;
     this.pdfUpload.files = files;
     this.updateDragDropText();
-    this.updateUploadStatus(); // Atualiza o status do upload
+    this.updateUploadStatus();
   }
 
   handleFileSelect(event) {
-    const file = event.target.files[0]; // Pega o primeiro arquivo selecionado
+    const file = event.target.files[0];
     if (file) {
       this.updateDragDropText();
-      this.updateUploadStatus(); // Atualiza o status do upload
+      this.updateUploadStatus();
     }
   }
 
@@ -134,6 +134,13 @@ class PDFNumberingForm {
 
     // Processa o PDF normalmente
     const formData = new FormData(this.form);
+
+    // Adiciona os novos campos ao FormData
+    const fontSize = document.getElementById('font-size').value;
+    const rubricaHeight = document.getElementById('rubrica-height').value;
+    formData.append('fontSize', fontSize);
+    formData.append('rubricaHeight', rubricaHeight);
+
     try {
       this.showLoadingOverlay();
       const response = await fetch('/processar-pdf', {
