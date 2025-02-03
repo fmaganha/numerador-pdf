@@ -222,22 +222,6 @@ header p {
   transition: transform 2s ease-in-out; /* Animação suave */
 }
 
-/* Animação para o jumpscare */
-/*@keyframes jumpscare {
-  0% {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
-}*/
-
 /* Estilo para a imagem de jumpscare */
 #jumpscare-image {
   position: fixed;
