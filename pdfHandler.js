@@ -3,28 +3,30 @@ const fs = require('fs');
 const sharp = require('sharp');
 
 // Configurações globais
+const FONT_SIZE = 8;
 const RECT_MARGIN = 5;
+const RUBRICA_MAX_HEIGHT = 17;
 const RUBRICA_SCALE = 0.6;
 const TEXT_SPACING = 10;
 const RUBRICA_SPACING = 5;
-const MARGEM_RUBRICA_TEXTO = 5; // Margem entre o texto e a rubrica
+const MARGEM_RUBRICA_TEXTO = 2; // Margem entre o texto e a rubrica
 
 /**
- * Processa a rubrica, limitando a altura a um valor máximo e mantendo a proporção.
+ * Processa a rubrica, limitando a altura a 20px e mantendo a proporção.
  */
-async function processarRubrica(rubricaPath, rubricaHeight) {
-  try {
-    const rubricaBuffer = await sharp(rubricaPath)
-      .resize(null, parseInt(rubricaHeight), {
-        fit: 'inside',
-        withoutEnlargement: true,
-      })
-      .toBuffer();
-    return rubricaBuffer;
-  } catch (error) {
-    console.error('Erro ao processar a rubrica:', error);
-    throw new Error('Erro ao processar a rubrica: ' + error.message);
-  }
+async function processarRubrica(rubricaPath) {
+    try {
+        const rubricaBuffer = await sharp(rubricaPath)
+            .resize(null, RUBRICA_MAX_HEIGHT, { 
+                fit: 'inside',
+                withoutEnlargement: true,
+            })
+            .toBuffer();
+        return rubricaBuffer;
+    } catch (error) {
+        console.error('Erro ao processar a rubrica:', error);
+        throw new Error('Erro ao processar a rubrica: ' + error.message);
+    }
 }
 
 // Função para desenhar o texto e a rubrica no PDF
