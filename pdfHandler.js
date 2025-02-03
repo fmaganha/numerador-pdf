@@ -3,9 +3,9 @@ const fs = require('fs');
 const sharp = require('sharp');
 
 // Configurações globais
-const FONT_SIZE = 9;
+const FONT_SIZE = 10;
 const RECT_MARGIN = 5;
-const RUBRICA_MAX_HEIGHT = 24;
+const RUBRICA_MAX_HEIGHT = 35;
 const RUBRICA_SCALE = 0.6;
 const TEXT_SPACING = 10;
 const RUBRICA_SPACING = 5;
