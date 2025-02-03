@@ -5,10 +5,10 @@ const sharp = require('sharp');
 // Configurações globais
 const FONT_SIZE = 9;
 const RECT_MARGIN = 5;
-const RUBRICA_MAX_HEIGHT = 33;
+const RUBRICA_MAX_HEIGHT = 30;
 const RUBRICA_SCALE = 0.7;
 const TEXT_SPACING = 10;
-const RUBRICA_SPACING = 6;
+const RUBRICA_SPACING = 5;
 
 /**
  * Processa a rubrica, limitando a altura a 20px e mantendo a proporção.
