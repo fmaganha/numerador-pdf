@@ -1,3 +1,4 @@
+/* Variáveis */
 :root {
   --primary-blue: #2c3e50;
   --light-blue: #34495e;
@@ -8,12 +9,14 @@
   --success-green: #27ae60;
 }
 
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* Layout */
 body {
   font-family: 'Roboto', sans-serif;
   background-color: var(--light-gray);
@@ -30,6 +33,7 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
+/* Header */
 header {
   text-align: center;
   margin-bottom: 2rem;
@@ -46,6 +50,7 @@ header p {
   font-size: 1rem;
 }
 
+/* Formulário */
 .form-group {
   margin-bottom: 1.5rem;
   position: relative;
@@ -78,7 +83,8 @@ header p {
   display: none;
 }
 
-#drag-drop-area {
+#drag-drop-area,
+#signature-drag-drop-area {
   border: 2px dashed #ddd;
   border-radius: 5px;
   padding: 1.5rem;
@@ -88,7 +94,8 @@ header p {
   transition: all 0.3s ease;
 }
 
-#drag-drop-area:hover {
+#drag-drop-area:hover,
+#signature-drag-drop-area:hover {
   background-color: rgba(46, 204, 113, 0.1);
   border-color: var(--accent-green);
 }
@@ -114,6 +121,7 @@ header p {
   opacity: 1;
 }
 
+/* Botão de Envio */
 .submit-btn {
   width: 100%;
   padding: 1rem;
@@ -134,6 +142,7 @@ header p {
   margin-right: 0.5rem;
 }
 
+/* Feedback Visual */
 #loading-overlay,
 #message-overlay {
   position: fixed;
@@ -183,73 +192,57 @@ header p {
   display: none !important;
 }
 
+/* Imagens Decorativas */
+#background-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-150%, -50%);
+  z-index: -1;
+  width: 200px;
+  height: auto;
+  transition: transform 2s ease-in-out;
+}
+
+#jumpscare-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 9999;
+  display: none;
+}
+
+/* Animação para o Jumpscare */
+@keyframes jumpscare {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  90% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* Responsividade */
 @media (max-width: 600px) {
   .container {
     margin: 1rem;
     padding: 1rem;
   }
-  
+
   header h1 {
     font-size: 2rem;
-  }
-}
-
-#signature-drag-drop-area {
-  border: 2px dashed #ddd;
-  border-radius: 5px;
-  padding: 1.5rem;
-  text-align: center;
-  color: var(--light-blue);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 1rem;
-}
-
-#signature-drag-drop-area:hover {
-  background-color: rgba(46, 204, 113, 0.1);
-  border-color: var(--accent-green);
-}
-
-/* Estilo para a imagem de fundo */
-#background-image {
-  position: absolute;
-  top: 50%; /* Centraliza verticalmente */
-  left: 50%; /* Alinha com o centro da tela */
-  transform: translate(-150%, -50%); /* Move a imagem para a esquerda, saindo de trás do container */
-  z-index: -1; /* Fica atrás do container */
-  width: 200px; /* Ajuste o tamanho conforme necessário */
-  height: auto;
-  transition: transform 2s ease-in-out; /* Animação suave */
-}
-
-/* Estilo para a imagem de jumpscare */
-#jumpscare-image {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%; /* Ocupa toda a largura da tela */
-  height: 100%; /* Ocupa toda a altura da tela */
-  object-fit: cover; /* Mantém a proporção da imagem */
-  z-index: 9999; /* Garante que a imagem fique acima de tudo */
-  display: none; /* Inicialmente oculta */
-}
-
-/* Animação para o jumpscare */
-@keyframes jumpscare {
-  0% {
-    opacity: 0; /* Começa invisível */
-    transform: scale(0.8); /* Inicia ligeiramente menor */
-  }
-  10% {
-    opacity: 1; /* Torna-se visível quase imediatamente */
-    transform: scale(1.5); /* Amplia rapidamente para criar impacto */
-  }
-  90% {
-    opacity: 1; /* Mantém a imagem visível por mais tempo */
-    transform: scale(1.1); /* Volta ao tamanho normal */
-  }
-  100% {
-    opacity: 0; /* Desaparece rapidamente */
-    transform: scale(1);
   }
 }

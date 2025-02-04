@@ -9,94 +9,87 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <img id="jumpscare-image" src="images/jumpscare.jpg" alt="Jumpscare">
-  <img id="background-image" src="images/sua-imagem.png" alt="Imagem de Fundo">
-  <div class="container">
+  <img id="jumpscare-image" src="images/jumpscare.jpg" alt="Jumpscare" aria-hidden="true">
+  <img id="background-image" src="images/sua-imagem.png" alt="Imagem de Fundo" aria-hidden="true">
+  <div class="container" role="main">
     <header>
       <h1>Numerador de PA</h1>
       <p>Numere seu PA de forma rápida e eficiente.</p>
     </header>
-
-    <form id="pdf-numbering-form" action="/processar-pdf" method="POST" enctype="multipart/form-data">
+    <form id="pdf-numbering-form" action="/processar-pdf" method="POST" enctype="multipart/form-data" aria-labelledby="form-description">
+      <p id="form-description" class="sr-only">Formulário para numerar páginas de um PDF.</p>
       <div class="form-group">
-        <label for="pdf-upload">
+        <label for="pdf-upload" aria-label="Enviar PDF">
           <i class="fas fa-file-pdf"></i> Envie o PDF
         </label>
-        <input type="file" id="pdf-upload" name="pdf" accept=".pdf" required>
-        <div id="drag-drop-area">
+        <input type="file" id="pdf-upload" name="pdf" accept=".pdf" required aria-describedby="pdf-upload-help">
+        <div id="drag-drop-area" role="button" tabindex="0" aria-label="Arraste e solte o PDF aqui ou clique para selecionar">
           Arraste e solte o PDF aqui ou clique para selecionar
         </div>
+        <p id="pdf-upload-help" class="sr-only">Selecione um arquivo PDF para upload.</p>
       </div>
-
       <div class="form-group">
-        <label for="start-page">
+        <label for="start-page" aria-label="Número Inicial da Página">
           <i class="fas fa-sort-numeric-down"></i> Número Inicial da Página
         </label>
-        <input type="number" id="start-page" name="numeroInicial" min="1" required>
+        <input type="number" id="start-page" name="numeroInicial" min="1" required aria-describedby="start-page-help">
+        <p id="start-page-help" class="sr-only">Insira o número inicial da página.</p>
       </div>
-
       <div class="form-group">
-        <label for="process-number">
+        <label for="process-number" aria-label="Número do Processo">
           <i class="fas fa-hashtag"></i> Número do Processo
         </label>
-        <input type="text" id="process-number" name="numeroProcesso" required>
+        <input type="text" id="process-number" name="numeroProcesso" required aria-describedby="process-number-help">
+        <p id="process-number-help" class="sr-only">Insira o número do processo.</p>
       </div>
-
       <div class="form-group">
-        <label for="process-year">
+        <label for="process-year" aria-label="Ano do Processo">
           <i class="fas fa-calendar-alt"></i> Ano do Processo
         </label>
-        <input type="number" id="process-year" name="anoProcesso" min="1900" max="2100" required>
+        <input type="number" id="process-year" name="anoProcesso" min="1900" max="2100" required aria-describedby="process-year-help">
+        <p id="process-year-help" class="sr-only">Insira o ano do processo.</p>
       </div>
-
-      <!-- Novos campos para tamanho da fonte e altura da rubrica -->
       <div class="form-group">
-        <label for="font-size">
+        <label for="font-size" aria-label="Tamanho da Fonte">
           <i class="fas fa-text-height"></i> Tamanho da Fonte
         </label>
-        <input type="number" id="font-size" name="fontSize" min="8" max="20" value="10" required>
+        <input type="number" id="font-size" name="fontSize" min="8" max="20" value="10" required aria-describedby="font-size-help">
+        <p id="font-size-help" class="sr-only">Insira o tamanho da fonte para numeração.</p>
       </div>
-
       <div class="form-group">
-        <label for="rubrica-height">
+        <label for="rubrica-height" aria-label="Altura Máxima da Rubrica">
           <i class="fas fa-ruler-vertical"></i> Altura Máxima da Rubrica (px)
         </label>
-        <input type="number" id="rubrica-height" name="rubricaHeight" min="10" max="50" value="25" required>
+        <input type="number" id="rubrica-height" name="rubricaHeight" min="10" max="50" value="25" required aria-describedby="rubrica-height-help">
+        <p id="rubrica-height-help" class="sr-only">Insira a altura máxima da rubrica.</p>
       </div>
-
       <div class="form-group checkbox-group">
-        <input type="checkbox" id="include-signature" name="incluirRubrica">
+        <input type="checkbox" id="include-signature" name="incluirRubrica" aria-label="Incluir Rubrica">
         <label for="include-signature">Incluir Rubrica</label>
-
-        <div class="signature-upload" id="signature-upload-container">
-          <label for="signature-upload">
+        <div class="signature-upload" id="signature-upload-container" aria-hidden="true">
+          <label for="signature-upload" aria-label="Enviar Rubrica">
             <i class="fas fa-signature"></i> Envie a Rubrica (JPG/PNG)
           </label>
-          <input type="file" id="signature-upload" name="rubrica" accept=".jpg,.png">
-          <div id="signature-drag-drop-area">
+          <input type="file" id="signature-upload" name="rubrica" accept=".jpg,.png" aria-describedby="signature-upload-help">
+          <div id="signature-drag-drop-area" role="button" tabindex="0" aria-label="Arraste e solte a rubrica aqui ou clique para selecionar">
             Arraste e solte a rubrica aqui ou clique para selecionar
           </div>
+          <p id="signature-upload-help" class="sr-only">Selecione uma imagem de rubrica para upload.</p>
         </div>
       </div>
-
-      <button type="submit" class="submit-btn">
+      <button type="submit" class="submit-btn" aria-label="Processar PDF">
         <i class="fas fa-file-upload"></i> Processar PDF
       </button>
     </form>
-
     <div class="form-group" id="upload-status-container">
-      <p id="upload-status" class="upload-status">Nenhum arquivo carregado.</p>
+      <p id="upload-status" class="upload-status" aria-live="polite">Nenhum arquivo carregado.</p>
     </div>
-
   </div>
-
-  <div id="loading-overlay" class="hidden">
+  <div id="loading-overlay" class="hidden" aria-hidden="true">
     <div class="loading-spinner"></div>
     <p>Processando PDF...</p>
   </div>
-
-  <div id="message-overlay" class="hidden"></div>
-
+  <div id="message-overlay" class="hidden" aria-hidden="true"></div>
   <script src="js/script.js"></script>
 </body>
 </html>

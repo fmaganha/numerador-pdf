@@ -6,77 +6,96 @@ const fs = require('fs');
 
 const app = express();
 
-// Configuração do Multer para lidar com múltiplos arquivos
-const upload = multer({
-    dest: 'uploads/',
-    limits: { fileSize: 200 * 1024 * 1024 } // 200 MB
-}).fields([
-    { name: 'pdf', maxCount: 1 },
-    { name: 'rubrica', maxCount: 1 }
-]);
-
+// Configuração do Multer
 const uploadDir = 'uploads';
 if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
+  fs.mkdirSync(uploadDir);
 }
 
+const upload = multer({
+  dest: uploadDir,
+  limits: { fileSize: 200 * 1024 * 1024 }, // 200 MB
+}).fields([{ name: 'pdf', maxCount: 1 }, { name: 'rubrica', maxCount: 1 }]);
+
+// Middleware para servir arquivos estáticos
 app.use(express.static('public'));
 
-app.post('/processar-pdf', upload, async (req, res) => {
-    const { numeroInicial, numeroProcesso, anoProcesso, incluirRubrica, fontSize, rubricaHeight } = req.body;
-  
-    // Verifica se o PDF foi enviado
-    if (!req.files['pdf']) {
-      return res.status(400).send('PDF é obrigatório.');
-    }
-  
-    const pdfPath = req.files['pdf'][0].path; // Caminho do PDF
-    const rubricaPath = req.files['rubrica'] ? req.files['rubrica'][0].path : null; // Caminho da rubrica (se existir)
-  
-    // Validação da rubrica
-    if (incluirRubrica === 'on' && !rubricaPath) {
-      return res.status(400).send('Rubrica é obrigatória.');
-    }
-  
-    try {
-      console.log('Iniciando processamento do PDF...');
-      const pdfPathProcessado = await pdfHandler.processarPDF(
-        pdfPath,
-        numeroInicial,
-        numeroProcesso,
-        anoProcesso,
-        incluirRubrica === 'on', // Converte para booleano
-        rubricaPath,
-        fontSize, // Novo parâmetro
-        rubricaHeight // Novo parâmetro
-      );
-      console.log('PDF processado com sucesso!', pdfPathProcessado);
-  
-      // Devolver caminho para o cliente para o download
-      res.send(`/download/${path.basename(pdfPathProcessado)}`);
-  
-      // Exclui os arquivos temporários após o download
-      fs.unlinkSync(pdfPath);
-      if (rubricaPath) fs.unlinkSync(rubricaPath);
-    } catch (error) {
-      console.error('Erro ao processar o PDF:', error);
-      res.status(500).send(`Erro ao processar o PDF: ${error.message}`);
+// Função para limpar arquivos temporários
+function cleanupFiles(...files) {
+  files.forEach((file) => {
+    if (file && fs.existsSync(file)) {
+      try {
+        fs.unlinkSync(file);
+        console.log(`Arquivo temporário removido: ${file}`);
+      } catch (error) {
+        console.error(`Erro ao remover arquivo temporário (${file}):`, error.message);
+      }
     }
   });
+}
 
-app.get('/download/:filename', (req, res) => {
-    const filePath = path.join(__dirname, req.params.filename);
-    res.download(filePath, (err) => {
-        if (err) {
-            console.error('Erro ao enviar o arquivo:', err);
-            res.status(500).send('Erro ao enviar o arquivo');
-        } else {
-            fs.unlinkSync(filePath); // Exclui o arquivo após o envio
-        }
-    });
+// Rota POST para processar o PDF
+app.post('/processar-pdf', upload, async (req, res) => {
+  try {
+    console.log('Iniciando processamento do PDF...');
+    const { numeroInicial, numeroProcesso, anoProcesso, incluirRubrica, fontSize, rubricaHeight } = req.body;
+
+    // Validação dos dados recebidos
+    if (!req.files['pdf']) {
+      console.error('Erro: Nenhum PDF enviado.');
+      return res.status(400).send('PDF é obrigatório.');
+    }
+
+    const pdfPath = req.files['pdf'][0].path;
+    const rubricaPath = req.files['rubrica'] ? req.files['rubrica'][0].path : null;
+
+    if (incluirRubrica === 'on' && !rubricaPath) {
+      console.error('Erro: Rubrica é obrigatória quando "Incluir Rubrica" está marcado.');
+      return res.status(400).send('Rubrica é obrigatória.');
+    }
+
+    // Processamento do PDF
+    const pdfPathProcessado = await pdfHandler.processarPDF(
+      pdfPath,
+      numeroInicial,
+      numeroProcesso,
+      anoProcesso,
+      incluirRubrica === 'on',
+      rubricaPath,
+      fontSize,
+      rubricaHeight
+    );
+
+    console.log('PDF processado com sucesso:', pdfPathProcessado);
+
+    // Resposta ao cliente
+    res.send(`/download/${path.basename(pdfPathProcessado)}`);
+
+    // Limpeza de arquivos temporários
+    cleanupFiles(pdfPath, rubricaPath);
+  } catch (error) {
+    console.error('Erro ao processar o PDF:', error.message);
+    res.status(500).send(`Erro ao processar o PDF: ${error.message}`);
+  }
 });
 
+// Rota GET para download do PDF
+app.get('/download/:filename', (req, res) => {
+  const filePath = path.join(__dirname, req.params.filename);
+
+  res.download(filePath, (err) => {
+    if (err) {
+      console.error(`Erro ao enviar o arquivo (${filePath}):`, err.message);
+      res.status(500).send('Erro ao enviar o arquivo.');
+    } else {
+      console.log(`Arquivo enviado com sucesso: ${filePath}`);
+      cleanupFiles(filePath); // Remove o arquivo após o download
+    }
+  });
+});
+
+// Inicialização do servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });

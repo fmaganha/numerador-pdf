@@ -1,5 +1,10 @@
 class PDFNumberingForm {
   constructor() {
+    this.initElements();
+    this.initEventListeners();
+  }
+
+  initElements() {
     this.form = document.getElementById('pdf-numbering-form');
     this.pdfUpload = document.getElementById('pdf-upload');
     this.dragDropArea = document.getElementById('drag-drop-area');
@@ -10,7 +15,6 @@ class PDFNumberingForm {
     this.loadingOverlay = document.getElementById('loading-overlay');
     this.messageOverlay = document.getElementById('message-overlay');
     this.uploadStatus = document.getElementById('upload-status');
-    this.initEventListeners();
   }
 
   initEventListeners() {
@@ -23,8 +27,8 @@ class PDFNumberingForm {
 
     // Event listeners para a rubrica
     this.signatureDragDropArea.addEventListener('click', () => this.signatureUpload.click());
-    this.signatureDragDropArea.addEventListener('dragover', this.handleSignatureDragOver.bind(this));
-    this.signatureDragDropArea.addEventListener('drop', this.handleSignatureFileDrop.bind(this));
+    this.signatureDragDropArea.addEventListener('dragover', this.handleSignatureDragOver.bind(this)); // Corrigido aqui
+    this.signatureDragDropArea.addEventListener('drop', this.handleSignatureFileDrop.bind(this)); // Corrigido aqui
     this.signatureUpload.addEventListener('change', this.handleSignatureFileSelect.bind(this));
   }
 
@@ -120,42 +124,30 @@ class PDFNumberingForm {
 
   async handleSubmit(event) {
     event.preventDefault();
-
-    // Gera um número aleatório entre 0 e 1
-    const randomChance = Math.random();
-    if (randomChance < 0.1) {
-      // Chance pequena de ativar o jumpscare
-      showJumpscare();
-      return; // Interrompe a função padrão
+    console.log('Iniciando envio do formulário...');
+    if (!this.validateForm()) {
+      console.error('Erro na validação do formulário.');
+      return;
     }
-
-    // Valida o formulário
-    if (!this.validateForm()) return;
-
-    // Processa o PDF normalmente
     const formData = new FormData(this.form);
-
-    // Adiciona os novos campos ao FormData
     const fontSize = document.getElementById('font-size').value;
     const rubricaHeight = document.getElementById('rubrica-height').value;
     formData.append('fontSize', fontSize);
     formData.append('rubricaHeight', rubricaHeight);
-
     try {
       this.showLoadingOverlay();
-      const response = await fetch('/processar-pdf', {
-        method: 'POST',
-        body: formData,
-      });
-
+      const response = await fetch('/processar-pdf', { method: 'POST', body: formData });
       if (response.ok) {
         const downloadLink = await response.text();
         window.location.href = downloadLink;
+        console.log('PDF processado com sucesso.');
       } else {
         this.showMessage('Erro ao processar o PDF', 'error');
+        console.error('Erro ao processar o PDF.');
       }
     } catch (error) {
       this.showMessage('Erro ao processar o PDF', 'error');
+      console.error('Erro ao processar o PDF:', error.message);
     } finally {
       this.hideLoadingOverlay();
     }
@@ -179,43 +171,6 @@ class PDFNumberingForm {
   }
 }
 
-// Função para animar a imagem de fundo
-function animateBackgroundImage() {
-  const backgroundImage = document.getElementById('background-image');
-  if (!backgroundImage) return;
-  // Define uma distância fixa para o movimento
-  const fixedOffset = 390; // Distância fixa em pixels
-  // Move a imagem para a direita
-  backgroundImage.style.transform = `translate(calc(-100% + ${fixedOffset}px), -50%)`;
-  // Aguarda um tempo e retorna à posição inicial
-  setTimeout(() => {
-    backgroundImage.style.transform = 'translate(-150%, -50%)';
-  }, 2000); // Duração da animação
-}
-
-// Função para iniciar a animação aleatória
-function startRandomAnimation() {
-  setInterval(() => {
-    animateBackgroundImage();
-  }, Math.random() * 55000 + 53000); // Intervalo aleatório
-}
-
-// Função para exibir o jumpscare
-function showJumpscare() {
-  const jumpscareImage = document.getElementById('jumpscare-image');
-  if (!jumpscareImage) return;
-  // Mostra a imagem de jumpscare
-  jumpscareImage.style.display = 'block';
-  jumpscareImage.style.animation = 'jumpscare 0.5s ease-in-out';
-  // Oculta a imagem após a animação
-  setTimeout(() => {
-    jumpscareImage.style.display = 'none';
-    jumpscareImage.style.animation = '';
-  }, 500); // Duração da animação
-}
-
-// Inicia a animação quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {
   new PDFNumberingForm();
-  startRandomAnimation();
 });
