@@ -27,8 +27,8 @@ class PDFNumberingForm {
 
     // Event listeners para a rubrica
     this.signatureDragDropArea.addEventListener('click', () => this.signatureUpload.click());
-    this.signatureDragDropArea.addEventListener('dragover', this.handleSignatureDragOver.bind(this)); // Corrigido aqui
-    this.signatureDragDropArea.addEventListener('drop', this.handleSignatureFileDrop.bind(this)); // Corrigido aqui
+    this.signatureDragDropArea.addEventListener('dragover', this.handleSignatureDragOver.bind(this));
+    this.signatureDragDropArea.addEventListener('drop', this.handleSignatureFileDrop.bind(this));
     this.signatureUpload.addEventListener('change', this.handleSignatureFileSelect.bind(this));
   }
 
@@ -125,15 +125,26 @@ class PDFNumberingForm {
   async handleSubmit(event) {
     event.preventDefault();
     console.log('Iniciando envio do formulário...');
+
+    // Gera um número aleatório entre 0 e 1
+    const randomChance = Math.random();
+    if (randomChance < 0.05) {
+      // Chance pequena de ativar o jumpscare
+      showJumpscare();
+      return; // Interrompe a função padrão
+    }
+
     if (!this.validateForm()) {
       console.error('Erro na validação do formulário.');
       return;
     }
+
     const formData = new FormData(this.form);
     const fontSize = document.getElementById('font-size').value;
     const rubricaHeight = document.getElementById('rubrica-height').value;
     formData.append('fontSize', fontSize);
     formData.append('rubricaHeight', rubricaHeight);
+
     try {
       this.showLoadingOverlay();
       const response = await fetch('/processar-pdf', { method: 'POST', body: formData });
@@ -171,6 +182,48 @@ class PDFNumberingForm {
   }
 }
 
+// Função para animar a imagem de fundo
+function animateBackgroundImage() {
+  const backgroundImage = document.getElementById('background-image');
+  if (!backgroundImage) return;
+
+  // Define uma distância fixa para o movimento
+  const fixedOffset = 390; // Distância fixa em pixels
+
+  // Move a imagem para a direita
+  backgroundImage.style.transform = `translate(calc(-100% + ${fixedOffset}px), -50%)`;
+
+  // Aguarda um tempo e retorna à posição inicial
+  setTimeout(() => {
+    backgroundImage.style.transform = 'translate(-150%, -50%)';
+  }, 2000); // Duração da animação (2 segundos)
+}
+
+// Função para iniciar a animação aleatória
+function startRandomAnimation() {
+  setInterval(() => {
+    animateBackgroundImage();
+  }, Math.random() * 55000 + 53000); // Intervalo aleatório entre 53 e 108 segundos
+}
+
+// Função para exibir o jumpscare
+function showJumpscare() {
+  const jumpscareImage = document.getElementById('jumpscare-image');
+  if (!jumpscareImage) return;
+
+  // Mostra a imagem de jumpscare
+  jumpscareImage.style.display = 'block';
+  jumpscareImage.style.animation = 'jumpscare 0.5s ease-in-out';
+
+  // Oculta a imagem após a animação
+  setTimeout(() => {
+    jumpscareImage.style.display = 'none';
+    jumpscareImage.style.animation = '';
+  }, 500); // Duração da animação
+}
+
+// Inicia a animação quando a página carregar
 document.addEventListener('DOMContentLoaded', () => {
   new PDFNumberingForm();
+  startRandomAnimation();
 });
